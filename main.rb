@@ -42,7 +42,7 @@ class Day
   end
   
   def addlesson(lesson)
-    @lessons.append lesson
+    @lessons.push lesson
   end
 
   def modlesson(id,lesson)
@@ -102,15 +102,12 @@ class RubyApp < Gtk::Window
 
         vbox.pack_start daysbar, true,true , 0
         vbox.pack_start editbar, false, false, 0
-        vbox.pack_start buttonbar, false, false, 0
-        
+
         add vbox
      end
-
 end
 week = Week.new
+week.days[:monday].addlesson "cipa" 
 Gtk.init
   window = RubyApp.new
 Gtk.main
-
-
