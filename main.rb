@@ -1,3 +1,5 @@
+#!/usr/bin/env ruby
+
 require 'date'
 require 'gtk2'
 class Week
