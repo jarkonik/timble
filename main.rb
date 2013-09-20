@@ -107,7 +107,6 @@ class RubyApp < Gtk::Window
      end
 end
 week = Week.new
-week.days[:monday].addlesson "cipa" 
 Gtk.init
   window = RubyApp.new
 Gtk.main
