@@ -1,6 +1,5 @@
 require 'date'
 require 'gtk2'
-
 class Week
 
   attr_reader :days
@@ -85,19 +84,25 @@ class RubyApp < Gtk::Window
         end
 
         hbox3 = Gtk::HBox.new true, 3
-        daylabels= Array.new
         Date::DAYNAMES.each do |day| 
           hbox3.add Gtk::Label.new day
         end
 
+        hbox4 = Gtk::HBox.new true, 3
+        hbox4.add Gtk::Button.new 
+
+        buttonbar = Gtk::Alignment.new 1, 1,1,1
+        buttonbar.add hbox4
+
         daysbar = Gtk::Alignment.new 1, 0,1,0
         daysbar.add hbox3
        
-        editbar = Gtk::Alignment.new 1, 1,1,0
+        editbar = Gtk::Alignment.new 1, 0,1,0
         editbar.add hbox2 
 
-        vbox.pack_start daysbar, true, true, 0
+        vbox.pack_start daysbar, true,true , 0
         vbox.pack_start editbar, false, false, 0
+        vbox.pack_start buttonbar, false, false, 0
         
         add vbox
      end
