@@ -3,20 +3,19 @@ require 'gtk2'
 
 class Week
 
-attr_reader :days
+  attr_reader :days
 
-  def initialize
-    @days= Hash.new
-    Date::DAYNAMES.each do |day|
-      @days[day.downcase.to_sym] = Day.new
+    def initialize
+      @days= Hash.new
+      Date::DAYNAMES.each do |day|
+        @days[day.downcase.to_sym] = Day.new
+      end
     end
-  end
 
 end
 
 class Lesson < Hash
-
-    def self.new
+    
       @@attr=Hash.new
       @@attr[:name]=nil
       @@attr[:building]=nil
@@ -25,6 +24,9 @@ class Lesson < Hash
       @@attr[:endtime]=nil
       @@attr[:type]=nil
       @@attr[:examtype]=nil
+
+    def self.attr
+      @@attr
     end
 
     def initialize
@@ -74,12 +76,13 @@ class RubyApp < Gtk::Window
     end
 
      def init_ui
-
         vbox = Gtk::VBox.new false, 2
 
         hbox2 = Gtk::HBox.new true, 3
-        namel=Gtk::Label.new "Name"
-        namee=Gtk::Entry.new
+        Lesson.attr.each_key do |attr|
+          hbox2.add Gtk::Label.new attr.to_s.capitalize 
+          hbox2.add Gtk::Entry.new
+        end
 
         hbox3 = Gtk::HBox.new true, 3
         daylabels= Array.new
