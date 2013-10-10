@@ -91,7 +91,15 @@ class RubyApp < Gtk::Window
         end
 
         hbox4 = Gtk::HBox.new true, 3
-        hbox4.add Gtk::Button.new 
+        hbox4.add Gtk::Button.new "Save" 
+
+        hbox5 = Gtk::HBox.new true, 3
+        7.times do |day|
+          hbox5.add Gtk::VBox.new 
+        end 
+  
+        classesbar = Gtk::Alignment.new 1, 1,1,1
+        classesbar.add hbox5
 
         buttonbar = Gtk::Alignment.new 1, 1,1,1
         buttonbar.add hbox4
@@ -102,7 +110,9 @@ class RubyApp < Gtk::Window
         editbar = Gtk::Alignment.new 1, 0,1,0
         editbar.add hbox2 
 
-        vbox.pack_start daysbar, true,true , 0
+        vbox.pack_start daysbar, false,false , 0
+        vbox.pack_start classesbar, true,true , 0
+        vbox.pack_start buttonbar, true,true , 0
         vbox.pack_start editbar, false, false, 0
 
         add vbox
