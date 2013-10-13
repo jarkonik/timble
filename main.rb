@@ -2,6 +2,8 @@
 
 require 'date'
 require 'gtk2'
+
+
 class Week
 
   attr_reader :days
@@ -97,7 +99,17 @@ class RubyApp < Gtk::Window
 
         hbox5 = Gtk::HBox.new true, 3
         7.times do |day|
-          hbox5.add Gtk::VBox.new(true,0).add Gtk::Frame.new 
+          daybox = Gtk::VBox.new(false,0)
+          dayboxframe= Gtk::Frame.new 
+          stringg = "Test"
+          lesson = Gtk::Button.new(stringg).modify_bg(Gtk::STATE_NORMAL,Gdk::Color.new(0,0,65535))
+          lesson.set_size_request 80,100 
+          daybox = Gtk::VBox.new(false,0)
+          dayboxframe.add lesson
+          daybox.add dayboxframe
+          hbox5.add daybox
+          
+         
         end
    
         hbox6 = Gtk::HBox.new true, 3
@@ -108,7 +120,7 @@ class RubyApp < Gtk::Window
         createbar = Gtk::Alignment.new 1, 1,1,0
         createbar.add hbox6
  
-        classesbar = Gtk::Alignment.new 1, 1,1,1
+        classesbar = Gtk::Alignment.new 1, 0,1,1
         classesbar.add hbox5
 
         buttonbar = Gtk::Alignment.new 1, 1,1,1
