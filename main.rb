@@ -72,7 +72,8 @@ class RubyApp < Gtk::Window
         
         init_ui         
 
-        set_default_size 250, 200
+        set_size_request 640,480
+
         set_window_position Gtk::Window::POS_CENTER
         
         show_all
