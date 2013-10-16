@@ -96,7 +96,10 @@ class RubyApp < Gtk::Window
         buttonbar = Gtk::HBox.new true, 3
         savebutton = Gtk::Button.new "Save"
 	savebutton.set_size_request 80, 35 
+        deletebutton = Gtk::Button.new "Delete"
+        deletebutton.set_size_request 80, 35
         buttonbar.add savebutton
+        buttonbar.add deletebutton
 
         lessonsbar = Gtk::HBox.new true, 3
         7.times do |day|
@@ -109,17 +112,13 @@ class RubyApp < Gtk::Window
           daybox = Gtk::VBox.new(false,0)
           dayboxframe.add lessonsalignment
           lessonsalignment.add lesson
-          daybox.add daybox
           lessonsbar.add dayboxframe
-          
-         
         end
    
         newclassbar = Gtk::HBox.new true, 3
         7.times do |day|
           newclassbar.add Gtk::Button.new("New class").set_size_request 80, 35
         end
-   
 
         vbox.pack_start daynamesbar, false,false , 0
         vbox.pack_start newclassbar, false,false , 0
