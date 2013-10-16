@@ -82,23 +82,23 @@ class RubyApp < Gtk::Window
      def init_ui
         vbox = Gtk::VBox.new false, 2
 
-        hbox2 = Gtk::HBox.new true, 3
+        editbar = Gtk::HBox.new true, 3
         Lesson.attr.each_key do |attr|
-          hbox2.add Gtk::Label.new attr.to_s.capitalize 
-          hbox2.add Gtk::Entry.new
+          editbar.add Gtk::Label.new attr.to_s.capitalize 
+          editbar.add Gtk::Entry.new
         end
 
-        hbox3 = Gtk::HBox.new true, 3
+        daynamesbar = Gtk::HBox.new true, 3
         Date::DAYNAMES.each do |day| 
-          hbox3.add Gtk::Label.new day
+          daynamesbar.add Gtk::Label.new day
         end
 
-        hbox4 = Gtk::HBox.new true, 3
+        buttonbar = Gtk::HBox.new true, 3
         savebutton = Gtk::Button.new "Save"
 	savebutton.set_size_request 80, 35 
-        hbox4.add savebutton
+        buttonbar.add savebutton
 
-        hbox5 = Gtk::HBox.new true, 3
+        lessonsbar = Gtk::HBox.new true, 3
         7.times do |day|
           daybox = Gtk::VBox.new(false,0)
           dayboxframe= Gtk::Frame.new 
@@ -110,34 +110,20 @@ class RubyApp < Gtk::Window
           dayboxframe.add lessonsalignment
           lessonsalignment.add lesson
           daybox.add daybox
-          hbox5.add dayboxframe
+          lessonsbar.add dayboxframe
           
          
         end
    
-        hbox6 = Gtk::HBox.new true, 3
+        newclassbar = Gtk::HBox.new true, 3
         7.times do |day|
-          hbox6.add Gtk::Button.new("New class").set_size_request 80, 35
+          newclassbar.add Gtk::Button.new("New class").set_size_request 80, 35
         end
    
-        createbar = Gtk::Alignment.new 1, 1,1,0
-        createbar.add hbox6
- 
-        classesbar = Gtk::Alignment.new 1, 0,1,1
-        classesbar.add hbox5
 
-        buttonbar = Gtk::Alignment.new 1, 1,1,1
-        buttonbar.add hbox4
-
-        daysbar = Gtk::Alignment.new 1, 0,1,0
-        daysbar.add hbox3
-       
-        editbar = Gtk::Alignment.new 1, 0,1,0
-        editbar.add hbox2 
-
-        vbox.pack_start daysbar, false,false , 0
-        vbox.pack_start createbar, false,false , 0
-        vbox.pack_start classesbar, true,true , 0
+        vbox.pack_start daynamesbar, false,false , 0
+        vbox.pack_start newclassbar, false,false , 0
+        vbox.pack_start lessonsbar, true,true , 0
         vbox.pack_start editbar, false, false, 0
         vbox.pack_start buttonbar, false,false , 0
 
