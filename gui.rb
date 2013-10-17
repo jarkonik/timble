@@ -2,10 +2,17 @@
 
 require 'gtk2'
 
-class RubyApp < Gtk::Window
+class Interface < Gtk::Window
+
+    @dayboxframes
 
     def initialize
         super
+
+        @dayboxframes= Hash.new
+        Date::DAYNAMES.each do |day|
+          @dayboxframes[day.downcase.to_sym] = Gtk::Frame.new 
+        end
 
         set_title "Center"
         signal_connect "destroy" do
@@ -19,6 +26,20 @@ class RubyApp < Gtk::Window
         set_window_position Gtk::Window::POS_CENTER
 
         show_all
+    end
+  
+    def updatelessons(week)
+      week.days.each do |dayname,day|  
+        day.lessons.each do |lessonmem|
+          lesson = Gtk::Button.new("Test").modify_bg(Gtk::STATE_NORMAL,Gdk::Color.new(0,0,65535))
+          lesson.set_size_request 80,100
+          lessonsalignment = Gtk::Alignment.new 0, 0,1,0
+          lessonsalignment.add lesson
+          @dayboxframes[dayname].add lessonsalignment
+          
+        end
+      end
+
     end
 
     def init_ui
@@ -44,17 +65,9 @@ class RubyApp < Gtk::Window
         buttonbar.add deletebutton
 
         lessonsbar = Gtk::HBox.new true, 3
-        7.times do |day|
-          daybox = Gtk::VBox.new(false,0)
-          dayboxframe= Gtk::Frame.new
-          stringg = "Test"
-          lesson = Gtk::Button.new(stringg).modify_bg(Gtk::STATE_NORMAL,Gdk::Color.new(0,0,65535))
-          lesson.set_size_request 80,100
-          lessonsalignment = Gtk::Alignment.new 0, 0,1,0
-          daybox = Gtk::VBox.new(false,0)
-          dayboxframe.add lessonsalignment
-          lessonsalignment.add lesson
+        @dayboxframes.each_value do |dayboxframe|
           lessonsbar.add dayboxframe
+          
         end
 
         newclassbar = Gtk::HBox.new true, 3

@@ -43,6 +43,8 @@ end
 
 class Day
 
+  attr_reader :lessons   
+
   def initialize
     @lessons = Array.new
   end
@@ -57,12 +59,5 @@ class Day
   def rmlesson(id)
   end
 
-  def readlesson(id)
-  end
-
 end
 
-week = Week.new
-Gtk.init
-  window = RubyApp.new
-Gtk.main
