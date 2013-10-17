@@ -14,7 +14,7 @@ lesson[:name]="Test"
 week.days[:saturday].addlesson(lesson)
 lesson = Lesson.new
 lesson[:name]="Test"
-week.days[:monday].addlesson(lesson)
+week.days[:wednesday].addlesson(lesson)
 Gtk.init
   window = Interface.new
   window.updatelessons(week)
