@@ -4,15 +4,10 @@ require 'gtk2'
 
 class Interface < Gtk::Window
 
-    @dayboxframes
+    @dayboxes
 
     def initialize
         super
-
-        @dayboxframes= Hash.new
-        Date::DAYNAMES.each do |day|
-          @dayboxframes[day.downcase.to_sym] = Gtk::Frame.new 
-        end
 
         set_title "Center"
         signal_connect "destroy" do
@@ -35,14 +30,19 @@ class Interface < Gtk::Window
           lesson.set_size_request 80,100
           lessonsalignment = Gtk::Alignment.new 0, 0,1,0
           lessonsalignment.add lesson
-          @dayboxframes[dayname].add lessonsalignment
+          @dayboxes[dayname].add lessonsalignment
           
         end
       end
-
     end
 
     def init_ui
+
+        @dayboxes= Hash.new
+        Date::DAYNAMES.each do |day|
+          @dayboxes[day.downcase.to_sym] = Gtk::VBox.new false, 2
+        end
+
         vbox = Gtk::VBox.new false, 2
 
         editbar = Gtk::HBox.new true, 3
@@ -65,9 +65,10 @@ class Interface < Gtk::Window
         buttonbar.add deletebutton
 
         lessonsbar = Gtk::HBox.new true, 3
-        @dayboxframes.each_value do |dayboxframe|
+        @dayboxes.each_value do |daybox|
+          dayboxframe = Gtk::Frame.new
+          dayboxframe.add daybox
           lessonsbar.add dayboxframe
-          
         end
 
         newclassbar = Gtk::HBox.new true, 3
