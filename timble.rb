@@ -25,4 +25,5 @@ Gtk.init
   window = Interface.new
   window.updatelessons(week)
   window.show_all
+  window.on_info
 Gtk.main

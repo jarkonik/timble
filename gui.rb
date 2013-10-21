@@ -21,8 +21,28 @@ class Interface < Gtk::Window
         set_window_position Gtk::Window::POS_CENTER
 
         show_all
+    end 
+
+    def on_info
+      
+      dialog = Gtk::Dialog.new("Message",
+        $main_application_window,
+        Gtk::Dialog::DESTROY_WITH_PARENT,
+        [ Gtk::Stock::OK, Gtk::Dialog::RESPONSE_NONE ])
+      
+        Lesson.attr.each_key do |attr|
+          dialog.vbox.add Gtk::Label.new attr.to_s.capitalize
+          dialog.vbox.add Gtk::Entry.new
+        end
+
+      
+      dialog.signal_connect('response') { dialog.destroy }
+      
+      dialog.show_all
+
+   
     end
-  
+
     def updatelessons(week)
       week.days.each do |dayname,day|  
         day.lessons.each do |lessonmem|
@@ -44,12 +64,6 @@ class Interface < Gtk::Window
         end
 
         vbox = Gtk::VBox.new false, 2
-
-        editbar = Gtk::HBox.new true, 3
-        Lesson.attr.each_key do |attr|
-          editbar.add Gtk::Label.new attr.to_s.capitalize
-          editbar.add Gtk::Entry.new
-        end
 
         daynamesbar = Gtk::HBox.new true, 3
         Date::DAYNAMES.each do |day|
@@ -79,9 +93,11 @@ class Interface < Gtk::Window
         vbox.pack_start daynamesbar, false,false , 0
         vbox.pack_start newclassbar, false,false , 0
         vbox.pack_start lessonsbar, true,true , 0
-        vbox.pack_start editbar, false, false, 0
         vbox.pack_start buttonbar, false,false , 0
 
         add vbox
+
+        window = Gtk::Window::POPUP
+
      end
 end
