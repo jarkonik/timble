@@ -23,18 +23,30 @@ class Interface < Gtk::Window
         show_all
     end 
 
-    def on_info
+    def on_edit
       
       dialog = Gtk::Dialog.new("Message",
         $main_application_window,
-        Gtk::Dialog::DESTROY_WITH_PARENT,
-        [ Gtk::Stock::OK, Gtk::Dialog::RESPONSE_NONE ])
+        Gtk::Dialog::DESTROY_WITH_PARENT)
+        
       
         Lesson.attr.each_key do |attr|
           dialog.vbox.add Gtk::Label.new attr.to_s.capitalize
           dialog.vbox.add Gtk::Entry.new
         end
+        
+        buttonbar = Gtk::HBox.new true, 3
+        savebutton = Gtk::Button.new "Save"
+        savebutton.set_size_request 80, 35
+        cancelbutton = Gtk::Button.new "Cancel"
+        cancelbutton.set_size_request 80, 35
+        deletebutton = Gtk::Button.new "Delete"
+        deletebutton.set_size_request 80, 35
+        buttonbar.add savebutton
+        buttonbar.add cancelbutton
+        buttonbar.add deletebutton
 
+        dialog.vbox.add buttonbar
       
       dialog.signal_connect('response') { dialog.destroy }
       
@@ -87,7 +99,11 @@ class Interface < Gtk::Window
 
         newclassbar = Gtk::HBox.new true, 3
         7.times do |day|
-          newclassbar.add Gtk::Button.new("New class").set_size_request 80, 35
+          newclassbutton = Gtk::Button.new("New class").set_size_request 80, 35
+          newclassbutton.signal_connect "clicked" do
+            on_edit
+          end
+          newclassbar.add newclassbutton
         end
 
         vbox.pack_start daynamesbar, false,false , 0
