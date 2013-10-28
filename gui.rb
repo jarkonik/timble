@@ -116,7 +116,5 @@ class Interface < Gtk::Window
         vbox.pack_start lessonsbar, true,true , 0
         add vbox
 
-        window = Gtk::Window::POPUP
-
      end
 end

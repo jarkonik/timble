@@ -2,6 +2,7 @@
 
 require 'date'
 require 'gtk2'
+require 'sqlite3'
 
 require_relative 'gui.rb'
 
