@@ -94,14 +94,6 @@ class Interface < Gtk::Window
           daynamesbar.add Gtk::Label.new day
         end
 
-        buttonbar = Gtk::HBox.new true, 3
-        savebutton = Gtk::Button.new "Save"
-        savebutton.set_size_request 80, 35
-        deletebutton = Gtk::Button.new "Delete"
-        deletebutton.set_size_request 80, 35
-        buttonbar.add savebutton
-        buttonbar.add deletebutton
-
         lessonsbar = Gtk::HBox.new true, 3
         @dayboxes.each_value do |daybox|
           dayboxframe = Gtk::Frame.new
@@ -122,8 +114,6 @@ class Interface < Gtk::Window
         vbox.pack_start daynamesbar, false,false , 0
         vbox.pack_start newclassbar, false,false , 0
         vbox.pack_start lessonsbar, true,true , 0
-        vbox.pack_start buttonbar, false,false , 0
-
         add vbox
 
         window = Gtk::Window::POPUP
