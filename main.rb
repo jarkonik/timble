@@ -21,7 +21,7 @@ class Week
     def save(path)
       db = SQLite3::Database.new path
       @days.each_key do |day|
-        db.execute "CREATE TABLE #{day} ( name text(20) )"
+        db.execute "CREATE TABLE #{day} ( name text(20), id int)"
       end
         db.execute 'INSERT INTO monday (name) VALUES ("test") '
 	db.execute 'INSERT INTO monday (name) VALUES ("test") '
