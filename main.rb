@@ -17,6 +17,16 @@ class Week
         @days[day.downcase.to_sym] = Day.new
       end
     end
+    
+    def save(path)
+      db = SQLite3::Database.new path
+      @days.each_key do |day|
+        db.execute "CREATE TABLE #{day} ( name text(20) )"
+      end
+        db.execute 'INSERT INTO monday (name) VALUES ("test") '
+	db.execute 'INSERT INTO monday (name) VALUES ("test") '
+      puts db.execute( "select * from monday where name==\"test\"" )
+    end
 
 end
 

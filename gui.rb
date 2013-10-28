@@ -48,9 +48,9 @@ class Interface < Gtk::Window
 
         dialog.vbox.add buttonbar
       
-      dialog.signal_connect('response') { dialog.destroy }
+        dialog.signal_connect('response') { dialog.destroy }
       
-      dialog.show_all
+        dialog.show_all
 
    
     end
