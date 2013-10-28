@@ -69,6 +69,18 @@ class Interface < Gtk::Window
     end
 
     def init_ui
+   
+        toolbar = Gtk::Toolbar.new
+        new     = Gtk::ToolButton.new(Gtk::Stock::NEW)
+        open     = Gtk::ToolButton.new(Gtk::Stock::OPEN)
+        save    = Gtk::ToolButton.new(Gtk::Stock::SAVE)
+        print     = Gtk::ToolButton.new(Gtk::Stock::PRINT)
+
+        toolbar.insert(0, print)
+        toolbar.insert(0, save)
+        toolbar.insert(0, open)
+        toolbar.insert(0, new)
+
 
         @dayboxes= Hash.new
         Date::DAYNAMES.each do |day|
@@ -106,6 +118,7 @@ class Interface < Gtk::Window
           newclassbar.add newclassbutton
         end
 
+        vbox.pack_start toolbar, false,false , 0
         vbox.pack_start daynamesbar, false,false , 0
         vbox.pack_start newclassbar, false,false , 0
         vbox.pack_start lessonsbar, true,true , 0
