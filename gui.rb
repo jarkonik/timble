@@ -9,7 +9,7 @@ class Interface < Gtk::Window
     def initialize
         super
 
-        set_title "Center"
+        set_title "Timble"
         signal_connect "destroy" do
             Gtk.main_quit
         end
@@ -25,7 +25,7 @@ class Interface < Gtk::Window
 
     def on_edit
       
-      dialog = Gtk::Dialog.new("Message",
+      dialog = Gtk::Dialog.new("Add/Edit lesson",
         $main_application_window,
         Gtk::Dialog::DESTROY_WITH_PARENT)
         
