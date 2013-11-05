@@ -54,12 +54,26 @@ class Interface < Gtk::Window
 
    
     end
+    
+    def clearlessons()
+      @dayboxes.each_value do |daybox|
+        daybox.each do |lesson|
+          lesson.destroy
+        end
+                  
+      end
+    
+    end
 
     def updatelessons(week)
       week.days.each do |dayname,day|  
-        day.lessons.each do |lessonmem|
-          lesson = Gtk::Button.new("Test").modify_bg(Gtk::STATE_NORMAL,Gdk::Color.new(0,0,65535))
-          lesson.set_size_request 80,100
+        day.lessons.each do |lessonhash|
+          lesson = Gtk::Button.new(" ").modify_bg(Gtk::STATE_NORMAL,Gdk::Color.new(0,0,65535))
+          label = lesson.child
+          label.set_markup "<span size='7000'>#{lessonhash.to_text}</span>"
+          label.set_wrap true
+          label.width_chars = 15 
+          lesson.set_size_request 80,100 
           lessonsalignment = Gtk::Alignment.new 0, 0,1,0
           lessonsalignment.add lesson
           @dayboxes[dayname].add lessonsalignment
@@ -72,10 +86,12 @@ class Interface < Gtk::Window
    
         toolbar = Gtk::Toolbar.new
         new     = Gtk::ToolButton.new(Gtk::Stock::NEW)
-        open     = Gtk::ToolButton.new(Gtk::Stock::OPEN)
+        open    = Gtk::ToolButton.new(Gtk::Stock::OPEN)
         save    = Gtk::ToolButton.new(Gtk::Stock::SAVE)
-        print     = Gtk::ToolButton.new(Gtk::Stock::PRINT)
+        print   = Gtk::ToolButton.new(Gtk::Stock::PRINT)
+        export  = Gtk::ToolButton.new(Gtk::Stock::CONVERT)
 
+        toolbar.insert(0, export)
         toolbar.insert(0, print)
         toolbar.insert(0, save)
         toolbar.insert(0, open)

@@ -1,10 +1,9 @@
 #!/usr/bin/env ruby
 
 require 'date'
-require 'gtk2'
 require 'sqlite3'
+require 'sequel'
 
-require_relative 'gui.rb'
 
 
 class Week
@@ -19,14 +18,23 @@ class Week
     end
     
     def save(path)
-      db = SQLite3::Database.new path
-      @days.each_key do |day|
-        db.execute "CREATE TABLE #{day} ( name text(20), id int)"
+      
+      db = Sequel.connect("sqlite://#{path}")
+      db.create_table :lessons do
+        primary_key :id
+        Lesson.attr.each_key do |attr|
+          String attr.to_sym
+        end
+        String :day
       end
-        db.execute 'INSERT INTO monday (name) VALUES ("test") '
-	db.execute 'INSERT INTO monday (name) VALUES ("test") '
-      puts db.execute( "select * from monday where name==\"test\"" )
-    end
+
+      lessons = db[:lessons]
+      @days.each do |dayname,day|
+        day.lessons.each do |lesson|
+          lessons.insert lesson
+        end
+      end
+    end      
 
 end
 
@@ -40,6 +48,17 @@ class Lesson < Hash
       @@attr[:endtime]=nil
       @@attr[:type]=nil
       @@attr[:examtype]=nil
+
+    def to_text
+      text= String.new
+      self.each do |key,value|
+        text+=key.to_s 
+        text+=':'
+        text+=value.to_s
+        text+=' '
+      end
+      text.chomp
+    end
 
     def self.attr
       @@attr
@@ -71,4 +90,3 @@ class Day
   end
 
 end
-
