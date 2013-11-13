@@ -2,10 +2,17 @@
 
 require 'gtk2'
 
+class LessonInterface < Gtk::Button
+
+  attr_accessor :memhandle
+
+end
+
 class Interface < Gtk::Window
 
     @dayboxes
-
+    @weekhandle   
+ 
     def initialize
         super
 
@@ -23,16 +30,17 @@ class Interface < Gtk::Window
         show_all
     end 
 
-    def on_edit
+    def on_edit(sender)
       
       dialog = Gtk::Dialog.new("Add/Edit lesson",
         $main_application_window,
         Gtk::Dialog::DESTROY_WITH_PARENT)
-        
-      
+         
+        attrentries= Hash.new
         Lesson.attr.each_key do |attr|
           dialog.vbox.add Gtk::Label.new attr.to_s.capitalize
-          dialog.vbox.add Gtk::Entry.new
+          attrentries[attr] = Gtk::Entry.new
+          dialog.vbox.add attrentries[attr]
         end
         
         buttonbar = Gtk::HBox.new true, 3
@@ -47,7 +55,29 @@ class Interface < Gtk::Window
         buttonbar.add deletebutton
 
         dialog.vbox.add buttonbar
-      
+        
+        savebutton.signal_connect('clicked') do
+          attrentries.each do |key,entry|
+            sender.memhandle[key]=entry.text
+            updatelessons @weekhandle
+          end     
+          clearlessons
+          updatelessons @weekhandle
+          show_all
+          dialog.destroy
+        end
+
+        deletebutton.signal_connect('clicked') do
+          sender.memhandle=nil
+          clearlessons
+          updatelessons @weekhandle
+          show_all
+          dialog.destroy
+        end
+        
+        cancelbutton.signal_connect('clicked') { dialog.destroy }
+        
+
         dialog.signal_connect('response') { dialog.destroy }
       
         dialog.show_all
@@ -66,9 +96,14 @@ class Interface < Gtk::Window
     end
 
     def updatelessons(week)
+      @weekhandle = week
       week.days.each do |dayname,day|  
         day.lessons.each do |lessonhash|
-          lesson = Gtk::Button.new(" ").modify_bg(Gtk::STATE_NORMAL,Gdk::Color.new(0,0,65535))
+          lesson = LessonInterface.new(" ").modify_bg(Gtk::STATE_NORMAL,Gdk::Color.new(0,0,65535))
+          lesson.memhandle = lessonhash
+          lesson.signal_connect "clicked" do |sender|
+           on_edit sender
+          end
           label = lesson.child
           label.set_markup "<span size='7000'>#{lessonhash.to_text}</span>"
           label.set_wrap true
@@ -120,8 +155,8 @@ class Interface < Gtk::Window
         newclassbar = Gtk::HBox.new true, 3
         7.times do |day|
           newclassbutton = Gtk::Button.new("New class").set_size_request 80, 35
-          newclassbutton.signal_connect "clicked" do
-            on_edit
+          newclassbutton.signal_connect "clicked" do |sender|
+#            on_add sender
           end
           newclassbar.add newclassbutton
         end
