@@ -8,6 +8,52 @@ class LessonInterface < Gtk::Button
 
 end
 
+class LessonDialog < Gtk::Dialog
+
+  def initialize(sender)
+        super "Add/Edit lesson",$main_application_window, Gtk::Dialog::DESTROY_WITH_PARENT
+          attrentries= Hash.new
+        Lesson.attr.each_key do |attr|
+          self.vbox.add Gtk::Label.new attr.to_s.capitalize
+          attrentries[attr] = Gtk::Entry.new
+          self.vbox.add attrentries[attr]
+        end
+        
+        buttonbar = Gtk::HBox.new true, 3
+        savebutton = Gtk::Button.new "Save"
+        savebutton.set_size_request 80, 35
+        cancelbutton = Gtk::Button.new "Cancel"
+        cancelbutton.set_size_request 80, 35
+        deletebutton = Gtk::Button.new "Delete"
+        deletebutton.set_size_request 80, 35
+        buttonbar.add savebutton
+        buttonbar.add cancelbutton
+        buttonbar.add deletebutton
+
+        self.vbox.add buttonbar
+        
+        savebutton.signal_connect('clicked') do
+          attrentries.each do |key,entry|
+            sender.memhandle[key]=entry.text
+          end     
+          self.response 0 
+          self.destroy
+        end
+
+        deletebutton.signal_connect('clicked') do
+          sender.memhandle=nil
+          self.response 0
+          self.destroy
+        end
+        
+        cancelbutton.signal_connect('clicked') { self.destroy }
+        
+
+       
+        self.show_all
+  end
+end 
+
 class Interface < Gtk::Window
 
     @dayboxes
@@ -30,59 +76,25 @@ class Interface < Gtk::Window
         show_all
     end 
 
+    def on_add(sender)
+
+      dialog = LessonDialog.new(sender)
+      dialog.signal_connect ('response') { on_dialog_close }
+   
+    end
+
+    def on_dialog_close
+      clearlessons
+      updatelessons(@weekhandle)
+      show_all
+      puts "chuj!"
+
+    end
+
     def on_edit(sender)
       
-      dialog = Gtk::Dialog.new("Add/Edit lesson",
-        $main_application_window,
-        Gtk::Dialog::DESTROY_WITH_PARENT)
-         
-        attrentries= Hash.new
-        Lesson.attr.each_key do |attr|
-          dialog.vbox.add Gtk::Label.new attr.to_s.capitalize
-          attrentries[attr] = Gtk::Entry.new
-          dialog.vbox.add attrentries[attr]
-        end
-        
-        buttonbar = Gtk::HBox.new true, 3
-        savebutton = Gtk::Button.new "Save"
-        savebutton.set_size_request 80, 35
-        cancelbutton = Gtk::Button.new "Cancel"
-        cancelbutton.set_size_request 80, 35
-        deletebutton = Gtk::Button.new "Delete"
-        deletebutton.set_size_request 80, 35
-        buttonbar.add savebutton
-        buttonbar.add cancelbutton
-        buttonbar.add deletebutton
-
-        dialog.vbox.add buttonbar
-        
-        savebutton.signal_connect('clicked') do
-          attrentries.each do |key,entry|
-            sender.memhandle[key]=entry.text
-            updatelessons @weekhandle
-          end     
-          clearlessons
-          updatelessons @weekhandle
-          show_all
-          dialog.destroy
-        end
-
-        deletebutton.signal_connect('clicked') do
-          sender.memhandle=nil
-          clearlessons
-          updatelessons @weekhandle
-          show_all
-          dialog.destroy
-        end
-        
-        cancelbutton.signal_connect('clicked') { dialog.destroy }
-        
-
-        dialog.signal_connect('response') { dialog.destroy }
-      
-        dialog.show_all
-
-   
+      dialog = LessonDialog.new(sender)
+      dialog.signal_connect ('response') { on_dialog_close }
     end
     
     def clearlessons()
@@ -156,7 +168,7 @@ class Interface < Gtk::Window
         7.times do |day|
           newclassbutton = Gtk::Button.new("New class").set_size_request 80, 35
           newclassbutton.signal_connect "clicked" do |sender|
-#            on_add sender
+            on_add sender
           end
           newclassbar.add newclassbutton
         end
