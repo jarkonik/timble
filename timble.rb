@@ -14,7 +14,7 @@ week.days[:saturday].addlesson(lesson)
 week.save 'test.db'
 
 Gtk.init
-  window = Interface.new
+  window = Interface.new(week)
   window.updatelessons(week)
   window.clearlessons
   window.updatelessons(week)

@@ -2,16 +2,30 @@
 
 require 'gtk2'
 
+require_relative 'main.rb'
+
 class LessonInterface < Gtk::Button
 
   attr_accessor :memhandle
 
 end
 
-class LessonDialog < Gtk::Dialog
+class NewClassButton < Gtk::Button
 
+  attr_accessor :dayhandle
+  
+  
+  def initialize
+    super("New class")
+  end
+
+
+end
+
+class LessonDialog < Gtk::Dialog
+  @buttonbar
   def initialize(sender)
-        super "Add/Edit lesson",$main_application_window, Gtk::Dialog::DESTROY_WITH_PARENT
+        super "Add/Edit lesson", $main_application_window, Gtk::Dialog::DESTROY_WITH_PARENT
           attrentries= Hash.new
         Lesson.attr.each_key do |attr|
           self.vbox.add Gtk::Label.new attr.to_s.capitalize
@@ -19,49 +33,71 @@ class LessonDialog < Gtk::Dialog
           self.vbox.add attrentries[attr]
         end
         
-        buttonbar = Gtk::HBox.new true, 3
+        @buttonbar = Gtk::HBox.new true, 3
         savebutton = Gtk::Button.new "Save"
         savebutton.set_size_request 80, 35
         cancelbutton = Gtk::Button.new "Cancel"
         cancelbutton.set_size_request 80, 35
-        deletebutton = Gtk::Button.new "Delete"
-        deletebutton.set_size_request 80, 35
-        buttonbar.add savebutton
-        buttonbar.add cancelbutton
-        buttonbar.add deletebutton
+        @buttonbar.add savebutton
+        @buttonbar.add cancelbutton
 
-        self.vbox.add buttonbar
+        self.vbox.add @buttonbar
         
-        savebutton.signal_connect('clicked') do
-          attrentries.each do |key,entry|
-            sender.memhandle[key]=entry.text
-          end     
-          self.response 0 
-          self.destroy
+        if sender.is_a? LessonInterface
+          savebutton.signal_connect('clicked') do
+            attrentries.each do |key,entry|
+              sender.memhandle[key]=entry.text
+            end
+            self.response 0 
+            self.destroy
+          end
+        else 
+          savebutton.signal_connect('clicked') do
+            newlesson = Lesson.new
+            attrentries.each do |key,entry|
+              newlesson[key]= entry.text
+            end
+            sender.dayhandle.addlesson newlesson
+            self.response 0 
+            self.destroy
+          end
         end
 
-        deletebutton.signal_connect('clicked') do
-          sender.memhandle=nil
-          self.response 0
-          self.destroy
-        end
-        
         cancelbutton.signal_connect('clicked') { self.destroy }
         
-
-       
         self.show_all
   end
 end 
 
+class LessonAddDialog < LessonDialog
+
+end
+
+class LessonEditDialog < LessonDialog
+
+  def initialize (sender)
+    super (sender)
+    deletebutton = Gtk::Button.new "Delete"
+    deletebutton.set_size_request 80, 35
+    @buttonbar.add deletebutton
+    show_all
+
+    deletebutton.signal_connect('clicked') do
+      sender.memhandle=nil
+      self.response 0
+      self.destroy
+    end
+  end
+
+end
 class Interface < Gtk::Window
 
     @dayboxes
     @weekhandle   
  
-    def initialize
-        super
-
+    def initialize(week)
+        super()
+        @weekhandle = week
         set_title "Timble"
         signal_connect "destroy" do
             Gtk.main_quit
@@ -78,7 +114,7 @@ class Interface < Gtk::Window
 
     def on_add(sender)
 
-      dialog = LessonDialog.new(sender)
+      dialog = LessonAddDialog.new(sender)
       dialog.signal_connect ('response') { on_dialog_close }
    
     end
@@ -87,13 +123,12 @@ class Interface < Gtk::Window
       clearlessons
       updatelessons(@weekhandle)
       show_all
-      puts "chuj!"
 
     end
 
     def on_edit(sender)
       
-      dialog = LessonDialog.new(sender)
+      dialog = LessonEditDialog.new(sender)
       dialog.signal_connect ('response') { on_dialog_close }
     end
     
@@ -165,8 +200,10 @@ class Interface < Gtk::Window
         end
 
         newclassbar = Gtk::HBox.new true, 3
-        7.times do |day|
-          newclassbutton = Gtk::Button.new("New class").set_size_request 80, 35
+        @weekhandle.days.each_value do |day|
+          newclassbutton = NewClassButton.new
+          newclassbutton.set_size_request 80, 35
+          newclassbutton.dayhandle = day 
           newclassbutton.signal_connect "clicked" do |sender|
             on_add sender
           end
