@@ -37,7 +37,9 @@ class Week
       lessons = db[:lessons]
       @days.each do |dayname,day|
         day.lessons.each do |lesson|
+          lesson[:day]=dayname.to_s
           lessons.insert lesson
+          lesson.delete :day
         end
       end
     end      
