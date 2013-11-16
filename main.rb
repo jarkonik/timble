@@ -9,12 +9,18 @@ require 'sequel'
 class Week
 
   attr_reader :days
-
+    
     def initialize
       @days= Hash.new
       Date::DAYNAMES.each do |day|
         @days[day.downcase.to_sym] = Day.new
       end
+    end
+   
+    def sort_lessons
+      @days.each_value do |day|
+        day.sort_lessons 
+      end 
     end
     
     def save(path)
@@ -35,7 +41,6 @@ class Week
         end
       end
     end      
-
 end
 
 class Lesson < Hash
@@ -74,6 +79,12 @@ end
 class Day
 
   attr_reader :lessons   
+ 
+  def sort_lessons
+    @lessons.sort! do |x,y|
+      x[:starttime] <=> y[:starttime]
+    end
+  end
 
   def initialize
     @lessons = Array.new
@@ -86,7 +97,10 @@ class Day
   def modlesson(id,lesson)
   end
 
-  def rmlesson(id)
+  def rmlesson(lesson)
+    @lessons.delete_if do |element|
+      lesson.equal? element
+    end
   end
 
 end

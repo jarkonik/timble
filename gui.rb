@@ -7,6 +7,7 @@ require_relative 'main.rb'
 class LessonInterface < Gtk::Button
 
   attr_accessor :memhandle
+  attr_accessor :dayhandle
 
 end
 
@@ -38,8 +39,13 @@ class LessonDialog < Gtk::Dialog
         savebutton.set_size_request 80, 35
         cancelbutton = Gtk::Button.new "Cancel"
         cancelbutton.set_size_request 80, 35
+        colorbutton = Gtk::Button.new "Color"
+        colorbutton.set_size_request 80, 35
+
         @buttonbar.add savebutton
         @buttonbar.add cancelbutton
+        @buttonbar.add colorbutton
+
 
         self.vbox.add @buttonbar
         
@@ -83,7 +89,7 @@ class LessonEditDialog < LessonDialog
     show_all
 
     deletebutton.signal_connect('clicked') do
-      sender.memhandle=nil
+      sender.dayhandle.rmlesson sender.memhandle
       self.response 0
       self.destroy
     end
@@ -121,6 +127,7 @@ class Interface < Gtk::Window
 
     def on_dialog_close
       clearlessons
+      @weekhandle.sort_lessons
       updatelessons(@weekhandle)
       show_all
 
@@ -148,6 +155,7 @@ class Interface < Gtk::Window
         day.lessons.each do |lessonhash|
           lesson = LessonInterface.new(" ").modify_bg(Gtk::STATE_NORMAL,Gdk::Color.new(0,0,65535))
           lesson.memhandle = lessonhash
+          lesson.dayhandle = day 
           lesson.signal_connect "clicked" do |sender|
            on_edit sender
           end
@@ -172,6 +180,8 @@ class Interface < Gtk::Window
         save    = Gtk::ToolButton.new(Gtk::Stock::SAVE)
         print   = Gtk::ToolButton.new(Gtk::Stock::PRINT)
         export  = Gtk::ToolButton.new(Gtk::Stock::CONVERT)
+       
+        save.signal_connect('clicked') {@weekhandle.save('test.db')}
 
         toolbar.insert(0, export)
         toolbar.insert(0, print)

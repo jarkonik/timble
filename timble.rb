@@ -11,7 +11,6 @@ lesson[:name]="Test"
 lesson[:building]="b2"
 lesson[:room]="101"
 week.days[:saturday].addlesson(lesson)
-week.save 'test.db'
 
 Gtk.init
   window = Interface.new(week)
